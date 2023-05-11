@@ -1,5 +1,6 @@
 import express from "express";
 import { User } from "../models/user.js";
+import { Products } from "../models/products.js";
 
 export const userRouter = express.Router();
 
@@ -32,35 +33,14 @@ userRouter.get("/users", async (req, res) => {
   }
 });
 
-userRouter.get("/users/:id", async (req, res) => {
-  const userID = req.params.id;
-  try {
-    let user;
-    if (userID) {
-      // Find a user by userID
-      user = await User.findById(userID);
-    }
-    if (!user) {
-      return res.status(404).send();
-    }
-    return res.send(user);
-  } catch (err) {
-    return res.status(500).send();
-  }
-});
-
 userRouter.patch("/users", async (req, res) => {
   //actualizar un usaurio por su nombre
   const name = req.query.name;
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",
-    "activities",
-    "friends",
-    "groups",
-    "favoriteTracks",
-    "activeChallenges",
-    "tracksHistory",
+    "mail",
+    "preferences",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -82,35 +62,18 @@ userRouter.patch("/users", async (req, res) => {
   }
 });
 
-userRouter.patch("/users/:id", async (req, res) => {
-  //actualizar un usaurio por su id
-  const userID = req.params.id;
-  const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    "name",
-    "activities",
-    "friends",
-    "groups",
-    "favoriteTracks",
-    "activeChallenges",
-    "tracksHistory",
-  ];
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  );
-  if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid updates!" });
-  }
+userRouter.delete("/users", async (req, res) => {
+  // Borrar un usuario por su nombre
+  const name = req.query.name;
   try {
-    const user = await User.findByIdAndUpdate({ userID }, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const user = await User.findOneAndDelete({ name });
     if (!user) {
       return res.status(404).send();
     }
+    await Products.updateMany({ users: user._id }, { $pull: { users: user._id } });
     return res.status(200).send(user);
   } catch (err) {
     return res.status(400).send(err);
   }
+  
 });
