@@ -64,17 +64,17 @@ productRouter.patch("/products", async (req, res) => {
 });
 
 productRouter.delete("/products", async (req, res) => {
-  // // Borrar un usuario por su nombre
-  // const name = req.query.name;
-  // try {
-  //   const product = await Products.findOneAndDelete({ name });
-  //   if (!product) {
-  //     return res.status(404).send();
-  //   }
-  //   await Products.updateMany({ users: product._id }, { $pull: { products: product._id } });
-  //   return res.status(200).send(product);
-  // } catch (err) {
-  //   return res.status(400).send(err);
-  // }
+  // Borrar un usuario por su nombre
+  const name = req.query.name;
+  try {
+    const product = await Products.findOneAndDelete({ name });
+    if (!product) {
+      return res.status(404).send();
+    }
+    await Products.updateMany({ users: product._id }, { $pull: { products: product._id } });
+    return res.status(200).send(product);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
   
 });
