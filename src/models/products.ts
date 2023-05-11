@@ -12,7 +12,7 @@
   const productSchema = new Schema<ProductsInterface>({
     name: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },  
     description: {
@@ -22,7 +22,7 @@
     },
     price: {
       type: Number,
-      required: false,
+      required: true,
       trim: true,
     },
     category: {
@@ -43,7 +43,7 @@
     },
     users: {
       type: [String],
-      required: true,
+      required: false,
     },
   });
 
