@@ -29,22 +29,20 @@ const userSchema = new Schema<UserDocumentInterface>({
   },
   preferences: {
     type: [String],
+    validate : {
+      validator : function(val: Preferences[]) {
+        /// Check if the option is a valuen inside the enum
+        if (!val.every((v) => Object.values(Preferences).includes(v))) {
+          return false;
+        }
+        /// Check if the array is not empty
+        return val.length > 0;
+      },
+      message: props => `Invalid preferences: ${JSON.stringify(props.value)}`
+    },
     enum: Object.values(Preferences),
     required: true,
   },
-  // trainingStatistics: {
-  //   type: Object,
-  //   validate: {
-  //     validator: function(val: TrainingStatisticsInterface) {
-  //       const isWeekValid = val.week && typeof val.week.km === "number" && typeof val.week.elevationGain === "number";
-  //       const isMonthValid = val.month && typeof val.month.km === "number" && typeof val.month.elevationGain === "number";
-  //       const isYearValid = val.year && typeof val.year.km === "number" && typeof val.year.elevationGain === "number";
-  //       return isWeekValid && isMonthValid && isYearValid;
-  //     },
-  //     message: props => `Invalid training statistics: ${JSON.stringify(props.value)}`
-  //   },
-  //   required: true,
-  // },  
 });
 
 export const User = model<UserDocumentInterface>('User', userSchema);
