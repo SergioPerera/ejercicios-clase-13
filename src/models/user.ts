@@ -1,6 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { Preferences } from '../enums/preferencesInterface.js';
-
+import { Preferences } from '../enums/preferencesEnum.js';
 
 
 export interface UserDocumentInterface extends Document {
