@@ -3,22 +3,15 @@ import { Preferences } from '../enums/preferencesEnum.js';
 
 
 export interface UserDocumentInterface extends Document {
-  ID: string;
   name: string;
   mail: string;
   preferences: Preferences[];
 }
 
 const userSchema = new Schema<UserDocumentInterface>({
-  ID: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  },
   name: {
     type: String,
-    required: false,
+    required: true,
     trim: true,
   },  
   mail: {
